@@ -1,122 +1,125 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { getLanding, postStamp, resolveToken } from './api'
+import type { LandingResponse, StampResponse } from './types'
 
-function App() {
-  const [count, setCount] = useState(0)
+type Phase = 'loading' | 'input' | 'result' | 'error'
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+const token = resolveToken()
+
+export default function App() {
+  const [phase, setPhase] = useState<Phase>('loading')
+  const [landing, setLanding] = useState<LandingResponse | null>(null)
+  const [result, setResult] = useState<StampResponse | null>(null)
+  const [phone, setPhone] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!token) {
+      setErrorMsg('QR 코드를 다시 찍어 주세요.')
+      setPhase('error')
+      return
+    }
+    getLanding(token)
+      .then((l) => { setLanding(l); setPhase('input') })
+      .catch((e) => { setErrorMsg(e.message ?? '문제가 생겼어요.'); setPhase('error') })
+  }, [])
+
+  const digits = phone.replace(/\D/g, '')
+  const canSubmit = digits.length >= 10 && !submitting
+
+  async function submit() {
+    if (!canSubmit || !token) return
+    setSubmitting(true)
+    try {
+      const r = await postStamp(token, digits)
+      setResult(r)
+      setPhase('result')
+    } catch (e: any) {
+      setErrorMsg(e.message ?? '적립에 실패했어요.')
+      setPhase('error')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  function reset() {
+    setPhone('')
+    setResult(null)
+    setPhase('input')
+  }
+
+  if (phase === 'loading') {
+    return <main className="screen"><p className="muted">불러오는 중…</p></main>
+  }
+
+  if (phase === 'error') {
+    return (
+      <main className="screen">
+        <div className="big-emoji">😥</div>
+        <p className="message">{errorMsg}</p>
+        <p className="muted">매장에 문의해 주세요.</p>
+      </main>
+    )
+  }
+
+  if (phase === 'result' && result) {
+    return (
+      <main className="screen">
+        <p className="store">{result.storeName}</p>
+
+        {result.rewardReached ? (
+          <>
+            <div className="big-emoji">🎉</div>
+            <p className="reward-hit">{result.rewardName} 받으세요!</p>
+          </>
+        ) : result.alreadyStampedToday ? (
+          <p className="today">오늘은 이미 도장을 받았어요</p>
+        ) : (
+          <p className="today">도장을 받았어요</p>
+        )}
+
+        <div className="count-wrap">
+          <span className="count">{result.stamps}</span>
+          <span className="count-unit">개</span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+
+        {result.stampGoal > 0 && !result.rewardReached && (
+          <p className="remaining">
+            <b>{result.remaining}</b>번 더 오면 <b>{result.rewardName}</b>
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        )}
 
-      <div className="ticks"></div>
+        <button className="ghost-btn" onClick={reset}>처음으로</button>
+      </main>
+    )
+  }
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+  // input
+  return (
+    <main className="screen">
+      <p className="store">{landing?.storeName}</p>
+      <p className="title">전화번호를 넣고<br/>도장을 받으세요</p>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <input
+        className="phone-input"
+        type="tel"
+        inputMode="numeric"
+        placeholder="010-0000-0000"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter') submit() }}
+        autoFocus
+      />
+
+      <button className="stamp-btn" disabled={!canSubmit} onClick={submit}>
+        {submitting ? '적립 중…' : '도장 받기'}
+      </button>
+
+      {landing?.rewardName && landing.stampGoal > 0 && (
+        <p className="hint">{landing.stampGoal}번 모으면 {landing.rewardName}</p>
+      )}
+    </main>
   )
 }
-
-export default App

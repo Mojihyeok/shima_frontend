@@ -1,111 +1,51 @@
+/*
+ * 쉬마 사장님 앱 디자인 토큰
+ * 색: 모든 글자 조합 WCAG AA 4.5:1 이상 검증 (brand #B5481A: 흰 배경 5.38, 흰 글자 5.38)
+ * 모드: <html data-mode="standard|easy"> — 화면 구조는 같고 토큰만 교체
+ */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg: #F5F3F0;
+  --card: #FFFFFF;
+  --ink: #2B2320;
+  --muted: #6B625B;
+  --brand: #B5481A;
+  --brand-soft: #FBE9DE;
+  --up: #1E7A45;
+  --down: #C4453B;
+  --line: #E4DCD2;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* ---- 표준 모드 (~44세): 본문 16px, 전체 대시보드 ---- */
+  --fs-small: 14px;
+  --fs-body: 16px;
+  --fs-title: 18px;
+  --fs-brand: 24px;
+  --fs-hero: 22px;
+  --fs-num: 40px;
+  --btn-h: 48px;      /* 전 모드 공통 최소 터치 48px */
+  --row-pad: 12px;
+  --gap: 14px;
+  --radius: 16px;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  font-family: 'Pretendard', system-ui, -apple-system, 'Malgun Gothic', sans-serif;
+  font-size: var(--fs-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* ---- 쉬움 모드 (60대~): 본문 22px, 지표 1개, 큰 버튼 ---- */
+:root[data-mode="easy"] {
+  --fs-small: 19px;
+  --fs-body: 22px;
+  --fs-title: 24px;
+  --fs-brand: 28px;
+  --fs-hero: 30px;
+  --fs-num: 64px;
+  --btn-h: 64px;
+  --row-pad: 18px;
+  --gap: 20px;
+  --radius: 20px;
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); }
+/* 한글은 단어(어절) 단위로 줄바꿈 — '오세/요' 같은 글자 단위 끊김 방지 */
+body { word-break: keep-all; overflow-wrap: anywhere; }
+button { font-family: inherit; }
