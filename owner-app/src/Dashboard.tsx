@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly } from './api'
 import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint } from './types'
 import WeeklyChart from './WeeklyChart'
@@ -41,21 +41,34 @@ export default function Dashboard() {
   const [error, setError] = useState('')
   const [showRegulars, setShowRegulars] = useState(false)
 
+  const inFlight = useRef(false)
+  const failures = useRef(0)
+
   const load = useCallback(async () => {
+    // 이전 요청이 아직 안 끝났거나, 화면이 안 보이는 탭이면 건너뜀 (서버·DB 과부하 방지)
+    if (inFlight.current || document.hidden) return
+    inFlight.current = true
     try {
       const [m, s, t, c, w] = await Promise.all([getMe(), getSummary(), getToday(), getCustomers(), getWeekly(8)])
       setMe(m); setSummary(s); setToday(t); setCustomers(c); setWeekly(w); setError('')
+      failures.current = 0
     } catch {
-      setError('데이터를 불러오지 못했어요. 서버가 켜져 있는지 확인해 주세요.')
+      // 일시적 실패 1~2번은 기존 화면 유지, 연속 3번째부터 안내
+      failures.current += 1
+      if (failures.current >= 3) setError('데이터를 불러오지 못했어요. 잠시 후 자동으로 다시 시도해요.')
     } finally {
+      inFlight.current = false
       setLoading(false)
     }
   }, [])
 
   useEffect(() => {
+    failures.current = 2 // 첫 로딩 실패는 바로 안내
     load()
-    const timer = setInterval(load, 3000) // 실시간 근사 — 3초마다 갱신 (TODO: SSE)
-    return () => clearInterval(timer)
+    const timer = setInterval(load, 5000) // 실시간 근사 — 5초마다 갱신 (TODO: SSE)
+    const onVisible = () => { if (!document.hidden) load() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => { clearInterval(timer); document.removeEventListener('visibilitychange', onVisible) }
   }, [load])
 
   const mode: Mode = me?.uiMode ?? cachedMode()
