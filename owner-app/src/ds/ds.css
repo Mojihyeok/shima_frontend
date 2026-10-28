@@ -1,0 +1,155 @@
+/*
+ * 쉬마 디자인 시스템 — Figma "03 디자인 시스템" variables 그대로
+ * 기존 앱 토큰(--bg, --brand …)과 겹치지 않게 --color-* 이름을 쓰고, .ds 안에서만 적용
+ * 글씨 크기: <… class="ds" data-text-size="1~5"> → 본문 16·18·20·22·24px, 제목·숫자도 같은 비율
+ */
+.ds {
+  --color-primary: #79CCFD;
+  --color-primary-deep: #1F6FA6;
+  --color-primary-soft: #E3F4FF;
+  --color-bg: #FFF9F0;
+  --color-surface: #FFFFFF;
+  --color-text: #1F2A33;
+  --color-text-sub: #5B6670;
+  --color-line: #E6DED2;
+  --radius-button: 16px;
+
+  --text-scale: 1;
+
+  font-family: 'Noto Sans KR', system-ui, -apple-system, 'Malgun Gothic', sans-serif;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+.ds[data-text-size="1"] { --text-scale: 0.8; }
+.ds[data-text-size="2"] { --text-scale: 0.9; }
+.ds[data-text-size="3"] { --text-scale: 1; }
+.ds[data-text-size="4"] { --text-scale: 1.1; }
+.ds[data-text-size="5"] { --text-scale: 1.2; }
+
+/* 특정도 0 — 개별 클래스의 margin이 이기도록 */
+:where(.ds) p { margin: 0; }
+
+/* ===== Button/Primary · Button/Secondary — 높이 64 이상, 폭 가득 ===== */
+.ds-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 64px; padding: 0 24px;
+  font-family: inherit; font-size: calc(20px * var(--text-scale)); line-height: 1.45;
+  color: var(--color-text); border-radius: var(--radius-button); cursor: pointer;
+}
+/* #79CCFD 위 흰 글씨 금지(1.8:1) → 글씨는 --color-text (8.3:1) */
+.ds-btn.primary { font-weight: 700; background: var(--color-primary); border: none; }
+.ds-btn.secondary { font-weight: 500; background: var(--color-surface); border: 2px solid var(--color-line); }
+.ds-btn:active { transform: scale(0.98); }
+.ds-btn:focus-visible { outline: 3px solid var(--color-primary-deep); outline-offset: 2px; }
+.ds-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+/* ===== Bubble/쉬마 — 얼굴 없이 말투와 말풍선으로 ===== */
+.ds-bubble {
+  display: flex; flex-direction: column; gap: 6px; width: 100%;
+  padding: 18px 20px; background: var(--color-surface);
+  border: 1.5px solid var(--color-line); border-radius: 4px 20px 20px 20px;
+}
+.ds-bubble-name { font-size: calc(15px * var(--text-scale)); font-weight: 700; color: var(--color-primary-deep); }
+.ds-bubble-text { font-size: calc(20px * var(--text-scale)); font-weight: 400; }
+
+/* ===== Chip/근거 ===== */
+.ds-chip {
+  display: inline-flex; padding: 8px 14px; border-radius: 999px;
+  font-size: calc(15px * var(--text-scale)); font-weight: 500;
+  color: var(--color-primary-deep); background: var(--color-primary-soft);
+}
+
+/* ===== Card/숫자 — 숫자 하나 = 카드 하나 ===== */
+.ds-card {
+  display: flex; flex-direction: column; gap: 4px; width: 100%;
+  padding: 16px; background: var(--color-surface);
+  border: 1.5px solid var(--color-line); border-radius: 16px; white-space: nowrap;
+}
+.ds-card-label { font-size: calc(15px * var(--text-scale)); color: var(--color-text-sub); }
+.ds-card-value { font-size: calc(30px * var(--text-scale)); font-weight: 700; font-variant-numeric: tabular-nums; }
+.ds-card-sub { font-size: calc(15px * var(--text-scale)); font-weight: 500; color: var(--color-primary-deep); }
+
+/* ===== ProgressBar — 진행률과 하는 일을 글로 함께 ===== */
+.ds-progress { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.ds-progress-label { font-size: calc(16px * var(--text-scale)); font-weight: 500; color: var(--color-text-sub); }
+.ds-progress-track { height: 14px; border-radius: 7px; background: var(--color-line); overflow: hidden; }
+.ds-progress-fill { height: 100%; border-radius: 7px; background: var(--color-primary); transition: width 0.3s ease; }
+
+/* ===== TextSizeBar — 조절 도구라서 글씨 크기에 따라 커지지 않음(손가락 아래서 움직이지 않게) ===== */
+.ds-textsize { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.ds-textsize-label { font-size: 15px; font-weight: 500; color: var(--color-text-sub); }
+.ds-textsize-row { display: flex; align-items: center; gap: 14px; }
+.ds-textsize-min { font-size: 16px; font-weight: 500; }
+.ds-textsize-max { font-size: 28px; font-weight: 700; }
+/* 손잡이 36px가 양 끝에서 잘리지 않도록 단계 위치는 좌우 18px 안쪽 */
+.ds-slider { position: relative; flex: 1; min-width: 0; height: 36px; }
+.ds-slider-rail, .ds-slider-active {
+  position: absolute; top: 14px; left: 0; height: 8px; border-radius: 4px;
+}
+.ds-slider-rail { right: 0; background: var(--color-line); }
+.ds-slider-active { background: var(--color-primary); }
+.ds-slider-stops { position: absolute; inset: 0 18px; pointer-events: none; }
+.ds-slider-step, .ds-slider-knob { position: absolute; display: block; transform: translateX(-50%); }
+.ds-slider-step { top: 15px; }
+.ds-slider-knob { top: 0; transition: left 0.15s ease; }
+/* 실제 입력은 투명한 range — 키보드·스크린리더 지원, 터치 영역 48px */
+.ds-slider-input {
+  position: absolute; left: 0; right: 0; top: 50%; height: 48px; margin: 0;
+  transform: translateY(-50%); opacity: 0; cursor: pointer;
+}
+.ds-slider-input:focus-visible ~ .ds-slider-stops .ds-slider-knob {
+  outline: 3px solid var(--color-primary-deep); outline-offset: 2px; border-radius: 50%;
+}
+
+/* ===== 확인 페이지(#/design-system) 전용 — Figma 시트 배치 재현, 앱 화면에서는 쓰지 않음 ===== */
+.ds-sheet { min-height: 100dvh; padding: 60px 80px 80px; background: #F4F1EC; }
+.ds-sheet-title { margin: 0; font-size: 44px; font-weight: 700; line-height: 1.45; }
+.ds-sheet-sub { margin-top: 6px; font-size: 22px; color: var(--color-text-sub); white-space: pre-wrap; }
+.ds-sheet-h2 { margin: 0 0 19px; font-size: 28px; font-weight: 700; line-height: 1.45; }
+.ds-sheet-cols { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: 76px; row-gap: 48px; margin-top: 48px; }
+.ds-sheet-col { display: flex; flex-direction: column; min-width: 0; }
+
+.ds-swatches { display: flex; flex-wrap: wrap; gap: 24px; }
+.ds-swatch { display: flex; flex-direction: column; gap: 8px; width: 200px; }
+.ds-swatch-chip { height: 120px; border: 1px solid var(--color-line); border-radius: 16px; }
+.ds-swatch-name { font-size: 16px; font-weight: 700; white-space: pre; }
+.ds-swatch-desc { font-size: 14px; color: var(--color-text-sub); }
+.ds-sheet-note { margin-top: 51px; font-size: 18px; font-weight: 500; color: var(--color-primary-deep); }
+
+.ds-type { margin-top: 54px; }
+.ds-type-steps { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px; }
+.ds-type-step {
+  display: flex; flex-direction: column; gap: 8px; padding: 20px; text-align: left;
+  font-family: inherit; line-height: 1.45; color: var(--color-text); cursor: pointer;
+  background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 16px;
+}
+.ds-type-step[aria-pressed="true"] { background: var(--color-primary-soft); }
+.ds-type-step:focus-visible { outline: 3px solid var(--color-primary-deep); outline-offset: 2px; }
+.ds-type-step-label { font-size: 14px; font-weight: 500; color: var(--color-text-sub); }
+.ds-textsize-demo { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: 34px; row-gap: 12px; margin-top: 85px; }
+.ds-textsize-demo .ds-textsize { width: 326px; }
+.ds-textsize-note { margin-bottom: 20px; font-size: 16px; color: var(--color-text-sub); white-space: pre-wrap; }
+
+.ds-panel { padding: 32px; background: var(--color-bg); border-radius: 24px; }
+.ds-touch { width: fit-content; max-width: 100%; }
+.ds-touch .ds-btn { width: 326px; max-width: 100%; }
+.ds-gap-marker { display: flex; align-items: center; gap: 10px; height: 20px; font-size: 14px; font-weight: 500; color: var(--color-text-sub); }
+.ds-gap-marker::before { content: ''; width: 4px; height: 16px; background: #E5484D; }
+.ds-rules { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 24px 0 0; list-style: none; font-size: 17px; white-space: nowrap; }
+
+.ds-components { margin-top: 77px; }
+.ds-components .ds-panel { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 40px 48px; padding: 40px; }
+.ds-slot { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.ds-slot-caption { font-size: 14px; font-weight: 500; color: var(--color-text-sub); }
+.ds-slot.w-wide { width: 326px; }
+.ds-slot.w-card { width: 155px; }
+
+@media (max-width: 600px) {
+  .ds-sheet { padding: 40px 16px 56px; }
+  .ds-sheet-title { font-size: 34px; }
+  .ds-sheet-sub { font-size: 18px; }
+  .ds-swatch { width: calc(50% - 12px); }
+  .ds-panel, .ds-components .ds-panel { padding: 24px; }
+  .ds-slot.w-wide, .ds-textsize-demo .ds-textsize { width: 100%; }
+  .ds-rules { white-space: normal; }
+}

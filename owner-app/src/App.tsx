@@ -5,6 +5,7 @@ import Login from './Login'
 import Dashboard from './Dashboard'
 import Report from './Report'
 import Diagnosis from './Diagnosis'
+import DesignSystem from './DesignSystem'
 import { getToken } from './auth'
 import { applyMode, cachedMode } from './mode'
 
@@ -33,6 +34,8 @@ export default function App() {
     return () => window.removeEventListener('shima:logout', onLogout)
   }, [])
 
+  // 디자인 시스템 확인 페이지는 로그인 없이 (정적 시트)
+  if (route === '#/design-system') return <DesignSystem />
   if (!authed) return <Login onLoggedIn={() => setAuthed(true)} />
   if (route === '#/qr') return <QrScreen mode="live" />
   if (route === '#/qr-print') return <QrScreen mode="print" />
