@@ -193,3 +193,17 @@
 .meter-fill { height: 100%; background: var(--brand); border-radius: 999px; }
 .evidence { margin: 0; padding-left: 18px; font-size: var(--fs-small); color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
 .axis.unmeasured .axis-name { color: var(--muted); }
+
+/* 손님 정보 삭제 — 실수 방지를 위해 눈에 덜 띄게, 터치 영역은 확보 */
+.del-btn {
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: var(--fs-small);
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.del-btn:hover { color: #C4453B; border-color: #C4453B; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -57,6 +57,9 @@ export const getCustomers = () => authed<CustomerSummary[]>('/customers')
 export const grantService = (customerId: number, rewardName: string, memo?: string) =>
   authed<{ granted: boolean }>(`/customers/${customerId}/grant`, 'POST', { rewardName, memo: memo ?? null })
 
+/** 손님 데이터 삭제 (복구 불가) */
+export const deleteCustomer = (customerId: number) => authed<null>(`/customers/${customerId}`, 'DELETE')
+
 export const getQr = () => authed<QrInfo>('/qr')
 export const getPrintQr = () => authed<QrInfo>('/qr/print')
 

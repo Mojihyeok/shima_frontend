@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
-import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly } from './api'
+import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly, deleteCustomer } from './api'
 import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint } from './types'
 import WeeklyChart from './WeeklyChart'
 import { signalLogout } from './auth'
@@ -92,6 +92,17 @@ export default function Dashboard() {
     await grantService(c.customerId, reward)
     alert('기록했어요.')
     load()
+  }
+
+  async function onDelete(c: CustomerSummary) {
+    const who = `${c.name ?? '손님'}(···${c.phoneLast4})`
+    if (!window.confirm(`${who}의 정보와 도장 ${c.visitCount}개를 모두 삭제할까요?\n되돌릴 수 없어요.`)) return
+    try {
+      await deleteCustomer(c.customerId)
+      await load()
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : '삭제하지 못했어요.')
+    }
   }
 
   if (loading) return <main className="wrap"><p className="muted">불러오는 중…</p></main>
@@ -211,7 +222,7 @@ export default function Dashboard() {
           <div className="table-scroll">
             <table className="data-table">
               <thead>
-                <tr><th>고객</th><th className="num-col">도장</th><th>첫 방문</th><th>최근 방문</th></tr>
+                <tr><th>고객</th><th className="num-col">도장</th><th>첫 방문</th><th>최근 방문</th><th><span className="sr-only">삭제</span></th></tr>
               </thead>
               <tbody>
                 {customers.map((c) => (
@@ -220,6 +231,7 @@ export default function Dashboard() {
                     <td className="num-col">{c.visitCount}</td>
                     <td>{shortDate(c.firstVisitAt)}</td>
                     <td>{relativeDay(c.lastVisitAt)}</td>
+                    <td><button className="del-btn" onClick={() => onDelete(c)} aria-label={`···${c.phoneLast4} 손님 정보 삭제`}>삭제</button></td>
                   </tr>
                 ))}
               </tbody>
