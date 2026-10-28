@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getMe, getWeeklyReport, getWeekly } from './api'
+import { getMe, getWeeklyReport, getWeekly, logEvent } from './api'
 import type { WeeklyReport, WeekPoint } from './types'
 import WeeklyChart from './WeeklyChart'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
@@ -16,6 +16,7 @@ export default function Report() {
   useEffect(() => {
     getMe().then((m) => { setMode(m.uiMode); applyMode(m.uiMode) }).catch(() => {})
     getWeekly(8).then(setWeekly).catch(() => {})
+    logEvent('REPORT_VIEW') // PoC: 리포트 열람 횟수
   }, [])
 
   useEffect(() => {

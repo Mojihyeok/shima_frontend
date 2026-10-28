@@ -13,6 +13,7 @@ export interface StampResponse {
   rewardReached: boolean
   rewardName: string | null
   alreadyStampedToday: boolean
+  firstVisit: boolean
 }
 
 export interface ApiError {

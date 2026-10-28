@@ -29,14 +29,23 @@ export async function getLanding(token: string): Promise<LandingResponse> {
 /** 적립 실패 시 던지는 오류 — error 코드로 분기 (consent_required → 동의 화면) */
 export interface StampError { error?: string; message: string }
 
-export async function postStamp(token: string, phone: string, agreed = false): Promise<StampResponse> {
+export async function postStamp(token: string, phone: string, agreed: boolean, elapsedMs: number): Promise<StampResponse> {
   const res = await fetch(`${API_BASE}/api/v1/c/${token}/stamp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(agreed ? { phone, agreed: true } : { phone }),
+    body: JSON.stringify({ phone, elapsedMs, ...(agreed ? { agreed: true } : {}) }),
   })
   if (!res.ok) throw (await res.json().catch(() => ({ message: '적립에 실패했어요.' }))) as StampError
   return res.json()
+}
+
+/** 유입 경로 ("어떻게 알고 오셨어요?") — 실패해도 손님에게는 안내하지 않음 */
+export async function postSource(token: string, phone: string, source: string): Promise<void> {
+  await fetch(`${API_BASE}/api/v1/c/${token}/source`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone, source }),
+  }).catch(() => undefined)
 }
 
 /** 내 정보 삭제 — 등록 여부와 관계없이 같은 응답 */

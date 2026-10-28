@@ -207,3 +207,20 @@
 }
 .del-btn:hover { color: #C4453B; border-color: #C4453B; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* 하루 손님 수 입력 */
+.daily-form { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.daily-input {
+  width: 120px; min-height: var(--btn-h); padding: 0 12px;
+  font-size: var(--fs-title); font-weight: 700; text-align: right;
+  border: 2px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink);
+}
+.daily-input:focus { outline: none; border-color: var(--brand); }
+.daily-unit { font-size: var(--fs-body); font-weight: 700; }
+
+/* PoC 지표 */
+.poc-range { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.poc-range input { min-height: 40px; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px; font-size: var(--fs-small); }
+.poc-goal { font-size: var(--fs-small); color: var(--muted); }
+.poc-ok { color: var(--up); font-weight: 700; }
+.poc-ng { color: var(--down); font-weight: 700; }

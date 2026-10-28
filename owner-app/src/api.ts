@@ -1,4 +1,4 @@
-import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis } from './types'
+import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics } from './types'
 import { getToken, signalLogout } from './auth'
 
 // 지정 없으면 "지금 접속한 호스트의 8080" — 태블릿에서 PC IP로 열어도 동작
@@ -70,3 +70,22 @@ export const getWeeklyReport = (weekStart?: string) =>
 export const runDiagnosis = (body: { storeName?: string; region?: string; visitorReviewCount?: number }) =>
   authed<Diagnosis>('/diagnosis', 'POST', body)
 export const getLatestDiagnosis = () => authed<Diagnosis | null>('/diagnosis/latest')
+
+// ===== PoC 측정 =====
+export const getDailyCount = (date?: string) =>
+  authed<DailyCount>(`/daily-visitors${date ? `?date=${date}` : ''}`)
+export const setDailyCount = (count: number, date?: string) =>
+  authed<DailyCount>('/daily-visitors', 'PUT', { count, date: date ?? null })
+
+/** 화면 열람 기록 — 실패해도 화면에는 영향 없음 */
+export const logEvent = (type: 'REPORT_VIEW' | 'DIAGNOSIS_VIEW') => {
+  authed<null>('/events', 'POST', { type }).catch(() => undefined)
+}
+
+export const getPocMetrics = (from?: string, to?: string) => {
+  const q = new URLSearchParams()
+  if (from) q.set('from', from)
+  if (to) q.set('to', to)
+  const qs = q.toString()
+  return authed<PocMetrics>(`/poc${qs ? `?${qs}` : ''}`)
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { getMe, getLatestDiagnosis, runDiagnosis } from './api'
+import { getMe, getLatestDiagnosis, runDiagnosis, logEvent } from './api'
 import type { Diagnosis as Result } from './types'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 
@@ -16,6 +16,7 @@ export default function Diagnosis() {
   useEffect(() => {
     getMe().then((m) => { setMode(m.uiMode); applyMode(m.uiMode); setStoreName((v) => v || m.storeName) }).catch(() => {})
     getLatestDiagnosis().then((r) => r && setResult(r)).catch(() => {})
+    logEvent('DIAGNOSIS_VIEW') // PoC: 진단 화면 열람 횟수
   }, [])
 
   async function submit(e: FormEvent) {

@@ -5,6 +5,7 @@ import Login from './Login'
 import Dashboard from './Dashboard'
 import Report from './Report'
 import Diagnosis from './Diagnosis'
+import Poc from './Poc'
 import { getToken } from './auth'
 import { applyMode, cachedMode } from './mode'
 
@@ -38,5 +39,6 @@ export default function App() {
   if (route === '#/qr-print') return <QrScreen mode="print" />
   if (route === '#/report') return <Report />
   if (route === '#/diagnosis') return <Diagnosis />
+  if (route === '#/poc') return <Poc />
   return <Dashboard />
 }

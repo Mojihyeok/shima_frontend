@@ -1,11 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
-import { getLanding, postStamp, postWithdraw, resolveToken, type StampError } from './api'
+import { getLanding, postSource, postStamp, postWithdraw, resolveToken, type StampError } from './api'
 import type { LandingResponse, StampResponse } from './types'
 
 type Phase = 'loading' | 'input' | 'consent' | 'result' | 'error' | 'withdraw' | 'withdrawn'
 
 const token = resolveToken()
+
+/** 유입 경로 선택지 — 값은 백엔드 StampService.SOURCES와 맞출 것 */
+const SOURCES: { value: string; label: string }[] = [
+  { value: 'instagram', label: '인스타그램' },
+  { value: 'blog', label: '네이버·블로그' },
+  { value: 'friend', label: '지인 소개' },
+  { value: 'pass', label: '지나가다가' },
+]
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('loading')
@@ -15,6 +23,9 @@ export default function App() {
   const [errorMsg, setErrorMsg] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [inputError, setInputError] = useState('')
+  const [sourceDone, setSourceDone] = useState(false)
+  // 적립 소요 시간 측정 시작점 — 처음엔 페이지 열린 시각(performance.now 기준 0), "처음으로" 누르면 그때부터
+  const startedAt = useRef(0)
 
   useEffect(() => {
     if (!token) {
@@ -35,13 +46,13 @@ export default function App() {
     setSubmitting(true)
     setInputError('')
     try {
-      const r = await postStamp(token, digits, agreed)
+      const r = await postStamp(token, digits, agreed, Math.round(performance.now() - startedAt.current))
       setResult(r)
       setPhase('result')
     } catch (err) {
       const e = err as StampError
       if (e.error === 'consent_required') setPhase('consent')          // 처음 온 손님 → 동의 화면
-      else if (e.error === 'bad_request') { setInputError(e.message); setPhase('input') } // 번호 형식 → 입력 화면 유지
+      else if (e.error === 'bad_request' || e.error === 'too_many_requests') { setInputError(e.message); setPhase('input') } // 번호 형식·횟수 초과 → 입력 화면 유지
       else { setErrorMsg(e.message ?? '적립에 실패했어요.'); setPhase('error') }
     } finally {
       setSubmitting(false)
@@ -68,7 +79,14 @@ export default function App() {
     setPhone('')
     setResult(null)
     setInputError('')
+    setSourceDone(false)
+    startedAt.current = performance.now()
     setPhase('input')
+  }
+
+  function answerSource(value: string) {
+    if (token) postSource(token, digits, value)
+    setSourceDone(true)
   }
 
   if (phase === 'loading') {
@@ -164,6 +182,21 @@ export default function App() {
           <p className="remaining">
             <b>{result.remaining}</b>번 더 오면 <b>{result.rewardName}</b>
           </p>
+        )}
+
+        {result.firstVisit && !result.alreadyStampedToday && (
+          sourceDone ? (
+            <p className="hint">알려주셔서 감사해요!</p>
+          ) : (
+            <section className="source" aria-label="방문 경로 질문">
+              <p className="source-q">어떻게 알고 오셨어요? <span className="muted">(선택)</span></p>
+              <div className="source-grid">
+                {SOURCES.map((s) => (
+                  <button key={s.value} className="source-btn" onClick={() => answerSource(s.value)}>{s.label}</button>
+                ))}
+              </div>
+            </section>
+          )
         )}
 
         <button className="ghost-btn" onClick={reset}>처음으로</button>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly, deleteCustomer } from './api'
+import DailyCountCard from './DailyCountCard'
 import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint } from './types'
 import WeeklyChart from './WeeklyChart'
 import { signalLogout } from './auth'
@@ -159,6 +160,8 @@ export default function Dashboard() {
 
         {todayList}
 
+        <DailyCountCard easy />
+
         <button className="expand-btn" onClick={() => setShowRegulars((v) => !v)} aria-expanded={showRegulars}>
           {showRegulars ? '단골 손님 접기 ▲' : `단골 손님 모두 보기 (${customers.length}명) ▼`}
         </button>
@@ -216,6 +219,8 @@ export default function Dashboard() {
 
       {todayList}
 
+        <DailyCountCard easy={false} />
+
       <section className="card">
         <h2 className="card-title">{t.regularsTitle} <span className="count-badge">{customers.length}</span></h2>
         {customers.length === 0 ? <p className="muted">{t.emptyRegulars}</p> : (
@@ -239,6 +244,8 @@ export default function Dashboard() {
           </div>
         )}
       </section>
+
+      <p className="footnote"><a href="#/poc">PoC 측정 지표 보기 →</a></p>
     </main>
   )
 }

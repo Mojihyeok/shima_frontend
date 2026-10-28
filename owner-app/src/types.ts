@@ -77,3 +77,31 @@ export interface Diagnosis {
   axes: DiagnosisAxis[]
   previousScore: number | null
 }
+
+/** 하루 전체 손님 수 (count null = 아직 입력 안 함) */
+export interface DailyCount {
+  date: string
+  count: number | null
+}
+
+/** PoC 성공 지표 — 백엔드 PocMetrics와 1:1 */
+export interface PocMetrics {
+  from: string
+  to: string
+  qrVisits: number
+  daysWithCount: number
+  enteredVisitors: number
+  qrVisitsOnCountedDays: number
+  participationRate: number | null
+  timedStamps: number
+  medianStampSeconds: number | null
+  p90StampSeconds: number | null
+  within10sRate: number | null
+  newCustomers: number
+  returnedWithin14Days: number
+  reportViews: number
+  diagnosisViews: number
+  manualGrants: number
+  autoGrants: number
+  sources: Record<string, number>
+}
