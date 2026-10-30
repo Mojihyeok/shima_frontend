@@ -1,0 +1,86 @@
+/*
+ * 손님 흐름(C1~C3) 화면 — Figma "02 손님 흐름" 390×844 프레임 기준
+ * 토큰은 owner-app/src/ds/ds.css와 같은 값 (손님 웹은 가벼운 번들이라 필요한 것만 복사)
+ * 휴대폰: 화면 가득 / 넓은 화면: 가운데에 폰 프레임으로 보여줌
+ */
+.cflow {
+  --color-primary: #79CCFD;
+  --color-primary-deep: #1F6FA6;
+  --color-primary-soft: #E3F4FF;
+  --color-bg: #FFF9F0;
+  --color-surface: #FFFFFF;
+  --color-text: #1F2A33;
+  --color-text-sub: #5B6670;
+  --color-line: #E6DED2;
+  --radius-button: 16px;
+
+  min-height: 100dvh; display: flex; justify-content: center;
+  font-family: 'Noto Sans KR', system-ui, -apple-system, 'Malgun Gothic', sans-serif;
+  line-height: 1.45; color: var(--color-text); background: var(--color-bg);
+}
+:where(.cflow) p, :where(.cflow) h1 { margin: 0; }
+
+.cflow-screen {
+  display: flex; flex-direction: column; gap: 22px;
+  width: 100%; max-width: 390px; min-height: 100dvh;
+  padding: calc(52px + env(safe-area-inset-top, 0px)) clamp(20px, 8vw, 32px) calc(36px + env(safe-area-inset-bottom, 0px));
+  background: var(--color-bg);
+}
+.cflow-screen.tight { gap: 18px; }
+@media (min-width: 600px) {
+  .cflow { align-items: center; padding: 32px 16px; background: #F4F1EC; }
+  .cflow-screen { min-height: 844px; border: 2px solid var(--color-line); border-radius: 40px; }
+}
+
+.cflow-spacer { flex: 1; }
+.cflow-buttons { display: flex; flex-direction: column; gap: 16px; }
+
+/* ===== Button/Primary · Button/Secondary — #79CCFD 위 글씨는 흰색 금지, --color-text ===== */
+.cflow-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 64px; padding: 0 24px;
+  font-family: inherit; font-size: 20px; line-height: 1.45; text-decoration: none;
+  color: var(--color-text); border-radius: var(--radius-button); cursor: pointer;
+}
+.cflow-btn.primary { font-weight: 700; background: var(--color-primary); border: none; }
+.cflow-btn.secondary { font-weight: 500; background: var(--color-surface); border: 2px solid var(--color-line); }
+.cflow-btn:active { transform: scale(0.98); }
+.cflow-btn:focus-visible, .cflow-pill:focus-visible { outline: 3px solid var(--color-primary-deep); outline-offset: 2px; }
+
+.cflow-store { font-size: 18px; font-weight: 500; color: var(--color-text-sub); }
+.cflow-title { font-size: 30px; font-weight: 700; }
+.cflow-title.sm { font-size: 26px; }
+.cflow-lead { font-size: 19px; color: var(--color-text-sub); }
+.cflow-foot { font-size: 15px; color: var(--color-text-sub); text-align: center; }
+
+/* ===== 도장판(C1) ===== */
+.cflow-stamps {
+  display: grid; grid-template-columns: repeat(5, 50px); justify-content: center; gap: 14px 12px;
+  padding: 22px 14px; background: var(--color-surface); border: 1.5px solid var(--color-line); border-radius: 20px;
+}
+.cflow-stamps img { display: block; }
+.cflow-goal { font-size: 20px; font-weight: 700; color: var(--color-primary-deep); text-align: center; }
+
+/* ===== 쿠폰(C2) ===== */
+.cflow-coupon {
+  display: flex; gap: 16px; overflow: hidden;
+  background: var(--color-surface); border: 1.5px solid var(--color-line); border-radius: 16px;
+}
+.cflow-coupon::before { content: ''; flex: 0 0 10px; background: var(--color-primary); }
+.cflow-coupon-body { display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 16px 0; }
+.cflow-coupon-tag { font-size: 14px; font-weight: 500; color: var(--color-primary-deep); }
+.cflow-coupon-name { font-size: 19px; font-weight: 700; }
+.cflow-coupon-note { font-size: 14px; color: var(--color-text-sub); }
+.cflow-question { font-size: 17px; font-weight: 700; }
+
+/* ===== 알약 버튼(유입 경로) — 높이 56 ===== */
+.cflow-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cflow-pill {
+  display: flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 8px;
+  font-family: inherit; font-size: 18px; font-weight: 500; line-height: 1.45; color: var(--color-text); cursor: pointer;
+  background: var(--color-surface); border: 1.5px solid var(--color-line); border-radius: 14px;
+}
+.cflow-pill[aria-pressed="true"] {
+  font-weight: 700; color: var(--color-primary-deep);
+  background: var(--color-primary-soft); border: 2.5px solid var(--color-primary-deep);
+}

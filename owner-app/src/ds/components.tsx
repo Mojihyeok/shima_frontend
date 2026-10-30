@@ -52,7 +52,7 @@ export function ProgressBar({ value, label }: { value: number; label: string }) 
 const STEPS = Object.keys(TEXT_SIZES).map(Number) as TextSize[]
 
 /** TextSizeBar — 글씨 크기 5단계. 오른쪽으로 밀수록 커짐 */
-export function TextSizeBar({ value, onChange }: { value: TextSize; onChange: (size: TextSize) => void }) {
+export function TextSizeBar({ value, onChange, label = '글씨 크기' }: { value: TextSize; onChange: (size: TextSize) => void; label?: string }) {
   const labelId = useId()
   const at = (s: TextSize) => `${((s - 1) / (STEPS.length - 1)) * 100}%`
   // 채움은 손잡이 중심까지 — 단계 영역이 좌우 18px 안쪽이라 그만큼 보정
@@ -60,7 +60,7 @@ export function TextSizeBar({ value, onChange }: { value: TextSize; onChange: (s
 
   return (
     <div className="ds-textsize">
-      <p className="ds-textsize-label" id={labelId}>글씨 크기</p>
+      <p className="ds-textsize-label" id={labelId}>{label}</p>
       <div className="ds-textsize-row">
         <span className="ds-textsize-min" aria-hidden>가</span>
         <div className="ds-slider">

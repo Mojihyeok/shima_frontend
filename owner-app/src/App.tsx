@@ -6,6 +6,7 @@ import Dashboard from './Dashboard'
 import Report from './Report'
 import Diagnosis from './Diagnosis'
 import DesignSystem from './DesignSystem'
+import OwnerFlow from './flow/OwnerFlow'
 import { getToken } from './auth'
 import { applyMode, cachedMode } from './mode'
 
@@ -36,6 +37,8 @@ export default function App() {
 
   // 디자인 시스템 확인 페이지는 로그인 없이 (정적 시트)
   if (route === '#/design-system') return <DesignSystem />
+  // 사장님 흐름 화면 (Figma 01, 목업 데이터) — #/flow/o1 ~ o7
+  if (route.startsWith('#/flow')) return <OwnerFlow route={route} />
   if (!authed) return <Login onLoggedIn={() => setAuthed(true)} />
   if (route === '#/qr') return <QrScreen mode="live" />
   if (route === '#/qr-print') return <QrScreen mode="print" />
