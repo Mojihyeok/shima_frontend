@@ -47,7 +47,7 @@ export default function CustomerFlow() {
 /** C1 QR 적립 — 앱 설치·회원가입 없이 바로 도장 */
 function C1({ stamps }: { stamps: number }) {
   return (
-    <main className="cflow-screen">
+    <main className="cflow-screen animate-flow-in motion-reduce:animate-none">
       <p className="cflow-store">{STORE}</p>
       <h1 className="cflow-title">도장 1개 찍었어요</h1>
       <div className="cflow-stamps" role="img" aria-label={`도장 ${STAMP_GOAL}개 중 ${stamps}개`}>
@@ -66,7 +66,7 @@ function C1({ stamps }: { stamps: number }) {
 /** C2 쿠폰·다양한 혜택 — "어디서 보고 오셨어요?"를 한 번만 물어 유입 경로를 남긴다 */
 function C2({ visits, source, onSource }: { visits: number; source: string | null; onSource: (s: string) => void }) {
   return (
-    <main className="cflow-screen tight">
+    <main className="cflow-screen tight animate-flow-in motion-reduce:animate-none">
       <h1 className="cflow-title sm">오늘 받을 수 있는 혜택</h1>
       <div className="cflow-coupon">
         <div className="cflow-coupon-body">
@@ -98,7 +98,7 @@ function C2({ visits, source, onSource }: { visits: number; source: string | nul
 function C3() {
   const reviewUrl = `https://map.naver.com/p/search/${encodeURIComponent(STORE)}`
   return (
-    <main className="cflow-screen">
+    <main className="cflow-screen animate-flow-in motion-reduce:animate-none">
       <h1 className="cflow-title">오늘 어떠셨어요?</h1>
       <p className="cflow-lead">남겨주신 리뷰는 사장님께 큰 힘이 돼요.</p>
       <div className="cflow-spacer" />

@@ -1,7 +1,7 @@
 import { useId, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react'
 import stepSvg from './assets/step.svg'
 import knobSvg from './assets/knob.svg'
-import { TEXT_SIZES, isTextSize, textSizeLabel, type TextSize } from './textSize'
+import { MAX_TEXT_PX, MIN_TEXT_PX, TEXT_PRESETS, textSizeLabel } from './textSize'
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'secondary' }
 
@@ -49,14 +49,14 @@ export function ProgressBar({ value, label }: { value: number; label: string }) 
   )
 }
 
-const STEPS = Object.keys(TEXT_SIZES).map(Number) as TextSize[]
+const SCALE_RANGE = MAX_TEXT_PX - MIN_TEXT_PX
 
-/** TextSizeBar — 글씨 크기 5단계. 오른쪽으로 밀수록 커짐 */
-export function TextSizeBar({ value, onChange, label = '글씨 크기' }: { value: TextSize; onChange: (size: TextSize) => void; label?: string }) {
+/** TextSizeBar — 16~24px, 1px 단위로 세밀하게. 오른쪽으로 밀수록 커짐 */
+export function TextSizeBar({ value, onChange, label = '글씨 크기' }: { value: number; onChange: (px: number) => void; label?: string }) {
   const labelId = useId()
-  const at = (s: TextSize) => `${((s - 1) / (STEPS.length - 1)) * 100}%`
-  // 채움은 손잡이 중심까지 — 단계 영역이 좌우 18px 안쪽이라 그만큼 보정
-  const activeWidth: CSSProperties = { width: `calc(18px + (100% - 36px) * ${(value - 1) / (STEPS.length - 1)})` }
+  const at = (px: number) => `${((px - MIN_TEXT_PX) / SCALE_RANGE) * 100}%`
+  // 채움은 손잡이 중심까지 — 트랙이 좌우 18px 안쪽이라 그만큼 보정
+  const activeWidth: CSSProperties = { width: `calc(18px + (100% - 36px) * ${(value - MIN_TEXT_PX) / SCALE_RANGE})` }
 
   return (
     <div className="ds-textsize">
@@ -67,12 +67,13 @@ export function TextSizeBar({ value, onChange, label = '글씨 크기' }: { valu
           <div className="ds-slider-rail" />
           <div className="ds-slider-active" style={activeWidth} />
           <input
-            className="ds-slider-input" type="range" min={1} max={5} step={1} value={value}
+            className="ds-slider-input" type="range" min={MIN_TEXT_PX} max={MAX_TEXT_PX} step={1} value={value}
             aria-labelledby={labelId} aria-valuetext={textSizeLabel(value)}
-            onChange={(e) => { const n = Number(e.target.value); if (isTextSize(n)) onChange(n) }}
+            onChange={(e) => onChange(Number(e.target.value))}
           />
+          {/* Figma 5단계 지점은 눈금으로 남겨둠 — 그 사이도 1px 단위로 끌 수 있다 */}
           <div className="ds-slider-stops">
-            {STEPS.map((s) => <img key={s} className="ds-slider-step" src={stepSvg} width={6} height={6} alt="" style={{ left: at(s) }} />)}
+            {TEXT_PRESETS.map((p) => <img key={p.px} className="ds-slider-step" src={stepSvg} width={6} height={6} alt="" style={{ left: at(p.px) }} />)}
             <img className="ds-slider-knob" src={knobSvg} width={36} height={36} alt="" style={{ left: at(value) }} />
           </div>
         </div>

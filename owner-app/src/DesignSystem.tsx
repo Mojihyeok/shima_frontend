@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './ds/ds.css'
 import { Bubble, Button, EvidenceChip, ProgressBar, StatCard, TextSizeBar } from './ds/components'
-import { TEXT_SIZES, cachedTextSize, saveTextSize, textSizeLabel, type TextSize } from './ds/textSize'
+import { TEXT_PRESETS, cachedTextPx, presetLabel, saveTextPx, textScaleStyle } from './ds/textSize'
 
 const SWATCHES = [
   { token: 'primary', hex: '#79CCFD', desc: '쉬마 메인 · 버튼·진행바·강조 면' },
@@ -21,15 +21,13 @@ const RULES = [
   '주 버튼은 엄지가 닿는 화면 아래쪽에',
 ]
 
-const SIZES = Object.keys(TEXT_SIZES).map(Number) as TextSize[]
-
 /** 디자인 시스템 확인 페이지 (#/design-system) — Figma "03 디자인 시스템" 시트. 글씨 크기를 바꾸면 아래 컴포넌트가 함께 커진다 */
 export default function DesignSystem() {
-  const [size, setSize] = useState<TextSize>(cachedTextSize())
-  const choose = (s: TextSize) => { setSize(s); saveTextSize(s) }
+  const [size, setSize] = useState<number>(cachedTextPx())
+  const choose = (px: number) => { setSize(px); saveTextPx(px) }
 
   return (
-    <main className="ds ds-sheet" data-text-size={size}>
+    <main className="ds ds-sheet" style={textScaleStyle(size)}>
       <h1 className="ds-sheet-title">03 디자인 시스템</h1>
       <p className="ds-sheet-sub">{'메인 컬러 #79CCFD · #FFF9F0  |  글씨 크기는 사장님이 바로 고르고, 터치 영역은 크게·간격은 확실하게'}</p>
 
@@ -52,10 +50,10 @@ export default function DesignSystem() {
           <section className="ds-type">
             <h2 className="ds-sheet-h2">글씨 크기 — 사장님이 바로 고르는 5단계</h2>
             <div className="ds-type-steps">
-              {SIZES.map((s) => (
-                <button key={s} type="button" className="ds-type-step" aria-pressed={s === size} onClick={() => choose(s)}>
-                  <span className="ds-type-step-label">{textSizeLabel(s)}</span>
-                  <span style={{ fontSize: TEXT_SIZES[s].px }}>사장님, 이번 주 손님이 늘었어요</span>
+              {TEXT_PRESETS.map((p) => (
+                <button key={p.px} type="button" className="ds-type-step" aria-pressed={p.px === size} onClick={() => choose(p.px)}>
+                  <span className="ds-type-step-label">{presetLabel(p)}</span>
+                  <span style={{ fontSize: p.px }}>사장님, 이번 주 손님이 늘었어요</span>
                 </button>
               ))}
             </div>

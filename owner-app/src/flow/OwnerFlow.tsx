@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import '../ds/ds.css'
 import './flow.css'
 import { Bubble, Button, EvidenceChip, ProgressBar, StatCard, TextSizeBar } from '../ds/components'
-import { cachedTextSize, saveTextSize, type TextSize } from '../ds/textSize'
+import { cachedTextPx, saveTextPx, textScaleStyle } from '../ds/textSize'
 import checkDone from './assets/check-done.svg'
 import checkDoing from './assets/check-doing.svg'
 import checkTodo from './assets/check-todo.svg'
@@ -51,15 +51,15 @@ const REWRITES = [
 
 export default function OwnerFlow({ route }: { route: string }) {
   const step = stepFromRoute(route)
-  const [textSize, setTextSize] = useState<TextSize>(cachedTextSize())
+  const [textSize, setTextSize] = useState<number>(cachedTextPx())
   const [store, setStore] = useState<Store>(STORES[0])
   const [channel, setChannel] = useState<Channel>('인스타그램')
   const [copy, setCopy] = useState(ORIGINAL_COPY)
 
-  const chooseSize = (s: TextSize) => { setTextSize(s); saveTextSize(s) }
+  const chooseSize = (px: number) => { setTextSize(px); saveTextPx(px) }
 
   return (
-    <div className="ds flow" data-text-size={textSize}>
+    <div className="ds flow" style={textScaleStyle(textSize)}>
       {step === 'o1' && <O1 textSize={textSize} onTextSize={chooseSize} />}
       {step === 'o2a' && <O2A store={store} onStore={setStore} />}
       {step === 'o2b' && <O2B />}
@@ -73,9 +73,9 @@ export default function OwnerFlow({ route }: { route: string }) {
 }
 
 /** O1 시작 — 글씨 크기를 먼저 고르고, 가게 찾는 방법 두 가지 중 하나 */
-function O1({ textSize, onTextSize }: { textSize: TextSize; onTextSize: (s: TextSize) => void }) {
+function O1({ textSize, onTextSize }: { textSize: number; onTextSize: (px: number) => void }) {
   return (
-    <main className="flow-screen">
+    <main className="flow-screen animate-flow-in motion-reduce:animate-none">
       <TextSizeBar value={textSize} onChange={onTextSize} label="글씨 크기 (오른쪽으로 밀면 커져요)" />
       <Bubble>사장님, 안녕하세요. 쉬마예요.<br />먼저 사장님 가게를 찾아볼게요. 어떻게 찾을까요?</Bubble>
       <div className="flow-spacer" />
@@ -96,7 +96,7 @@ function O2A({ store, onStore }: { store: Store; onStore: (s: Store) => void }) 
   const selected = results.find((s) => s.name === store.name)
 
   return (
-    <main className="flow-screen">
+    <main className="flow-screen animate-flow-in motion-reduce:animate-none">
       <Bubble>가게 이름을 알려주세요.</Bubble>
       <input
         className="flow-input" value={query} onChange={(e) => setQuery(e.target.value)}
@@ -130,7 +130,7 @@ function O2B() {
   const album = useRef<HTMLInputElement>(null)
   const onPick = (e: ChangeEvent<HTMLInputElement>) => { if (e.target.files?.length) go('o3') }
   return (
-    <main className="flow-screen">
+    <main className="flow-screen animate-flow-in motion-reduce:animate-none">
       <Bubble>영수증을 네모 안에 맞춰 찍어주세요. 가게 이름과 주소가 보이면 돼요.</Bubble>
       <div className="flow-camera" aria-hidden>
         <div className="flow-camera-guide">영수증을<br />여기에</div>
@@ -173,7 +173,7 @@ function O3({ store }: { store: Store }) {
   const doing = current === -1 ? '다 됐어요' : CHECKS[current].doing
 
   return (
-    <main className="flow-screen">
+    <main className="flow-screen animate-flow-in motion-reduce:animate-none">
       <h1 className="flow-title">쉬마가 {store.name}{objectParticle(store.name)}<br />살펴보고 있어요</h1>
       <ol className="flow-checklist">
         {CHECKS.map((c, i) => {
@@ -196,7 +196,7 @@ function O3({ store }: { store: Store }) {
 /** O4 첫 진단 — 숫자 카드 4개 + 손님들이 하는 말. 모든 말에 근거 칩 */
 function O4({ store }: { store: Store }) {
   return (
-    <main className="flow-screen tight">
+    <main className="flow-screen tight animate-flow-in motion-reduce:animate-none">
       <h1 className="flow-title sm">{store.name}, 지금 이렇게 보여요</h1>
       <div className="flow-cards">
         <StatCard label="네이버 별점" value="4.6" sub="리뷰 128개" />
@@ -215,7 +215,7 @@ function O4({ store }: { store: Store }) {
 /** O5 바로 제안 — 채널과 추천 문구를 확인하고 "올려주세요"를 눌러야만 다음으로 */
 function O5({ channel, onChannel, onFresh }: { channel: Channel; onChannel: (c: Channel) => void; onFresh: () => void }) {
   return (
-    <main className="flow-screen tight">
+    <main className="flow-screen tight animate-flow-in motion-reduce:animate-none">
       <Bubble>손님들이 칭찬한 크로플로 오늘 글을 올려볼까요?</Bubble>
       <div className="flow-pills" role="group" aria-label="올릴 곳">
         {CHANNELS.map((c) => (
@@ -243,7 +243,7 @@ function O6({ copy, onCopy }: { copy: string; onCopy: (t: string) => void }) {
   const pick = (r: typeof REWRITES[number]) => { setPicked(r.label); onCopy(r.text) }
 
   return (
-    <main className="flow-screen tight">
+    <main className="flow-screen tight animate-flow-in motion-reduce:animate-none">
       <Bubble>어떻게 바꿔드릴까요?</Bubble>
       <div className="flow-pills" role="group" aria-label="고치는 방법">
         {REWRITES.map((r) => (
@@ -267,7 +267,7 @@ function O6({ copy, onCopy }: { copy: string; onCopy: (t: string) => void }) {
 /** O7 올렸어요 — 결과를 다시 말로 알려준다는 예고 */
 function O7({ channel }: { channel: Channel }) {
   return (
-    <main className="flow-screen">
+    <main className="flow-screen animate-flow-in motion-reduce:animate-none">
       <div className="flow-done">완료</div>
       <h1 className="flow-title">{channel}에 올렸어요</h1>
       <Bubble>일주일 뒤에 "아주대 카페" 검색 순위가 어떻게 바뀌었는지 알려드릴게요.</Bubble>

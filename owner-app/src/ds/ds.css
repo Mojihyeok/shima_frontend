@@ -1,8 +1,17 @@
 /*
  * 쉬마 디자인 시스템 — Figma "03 디자인 시스템" variables 그대로
  * 기존 앱 토큰(--bg, --brand …)과 겹치지 않게 --color-* 이름을 쓰고, .ds 안에서만 적용
- * 글씨 크기: <… class="ds" data-text-size="1~5"> → 본문 16·18·20·22·24px, 제목·숫자도 같은 비율
+ * 글씨 크기: <… class="ds" style="--text-scale: px/20">로 전달(ds/textSize.ts textScaleStyle) — 16~24px, 1px 단위
  */
+
+/* --text-scale을 숫자로 등록 — 등록해두면 바뀔 때 .ds가 값을 보간하고, 그 보간된 값으로
+   calc()를 쓰는 모든 자식의 font-size가 요소마다 transition 없이도 함께 부드럽게 커지고 작아진다 */
+@property --text-scale {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 .ds {
   --color-primary: #79CCFD;
   --color-primary-deep: #1F6FA6;
@@ -15,16 +24,12 @@
   --radius-button: 16px;
 
   --text-scale: 1;
+  transition: --text-scale 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 
   font-family: 'Noto Sans KR', system-ui, -apple-system, 'Malgun Gothic', sans-serif;
   line-height: 1.45;
   color: var(--color-text);
 }
-.ds[data-text-size="1"] { --text-scale: 0.8; }
-.ds[data-text-size="2"] { --text-scale: 0.9; }
-.ds[data-text-size="3"] { --text-scale: 1; }
-.ds[data-text-size="4"] { --text-scale: 1.1; }
-.ds[data-text-size="5"] { --text-scale: 1.2; }
 
 /* 특정도 0 — 개별 클래스의 margin이 이기도록 */
 :where(.ds) p { margin: 0; }
@@ -87,11 +92,12 @@
   position: absolute; top: 14px; left: 0; height: 8px; border-radius: 4px;
 }
 .ds-slider-rail { right: 0; background: var(--color-line); }
-.ds-slider-active { background: var(--color-primary); }
+/* 1px 단위로 끌 때마다 살짝 뒤쫓아가듯 — 너무 느리면 손가락보다 처져 보여서 짧게 */
+.ds-slider-active { background: var(--color-primary); transition: width 0.12s cubic-bezier(0.16, 1, 0.3, 1); }
 .ds-slider-stops { position: absolute; inset: 0 18px; pointer-events: none; }
 .ds-slider-step, .ds-slider-knob { position: absolute; display: block; transform: translateX(-50%); }
 .ds-slider-step { top: 15px; }
-.ds-slider-knob { top: 0; transition: left 0.15s ease; }
+.ds-slider-knob { top: 0; transition: left 0.12s cubic-bezier(0.16, 1, 0.3, 1); }
 /* 실제 입력은 투명한 range — 키보드·스크린리더 지원, 터치 영역 48px */
 .ds-slider-input {
   position: absolute; left: 0; right: 0; top: 50%; height: 48px; margin: 0;
