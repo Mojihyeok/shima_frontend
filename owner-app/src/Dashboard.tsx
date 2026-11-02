@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
-import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly, deleteCustomer } from './api'
+import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, getWeekly, deleteCustomer, getActions } from './api'
 import DailyCountCard from './DailyCountCard'
-import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint } from './types'
+import AtRiskCard from './AtRiskCard'
+import MarketingCard from './MarketingCard'
+import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint, MarketingAction } from './types'
 import WeeklyChart from './WeeklyChart'
 import { signalLogout } from './auth'
 import { COPY, applyMode, cachedMode, speak, type Mode } from './mode'
@@ -38,6 +40,10 @@ export default function Dashboard() {
   const [today, setToday] = useState<CustomerSummary[]>([])
   const [customers, setCustomers] = useState<CustomerSummary[]>([])
   const [weekly, setWeekly] = useState<WeekPoint[]>([])
+  const [actions, setActions] = useState<MarketingAction[]>([])
+  // 마케팅 기록은 자주 안 바뀌므로 자동 갱신과 분리 — 열 때 + 기록/삭제 후에만
+  const loadActions = useCallback(() => { getActions().then(setActions).catch(() => {}) }, [])
+  useEffect(() => { loadActions() }, [loadActions])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showRegulars, setShowRegulars] = useState(false)
@@ -162,6 +168,10 @@ export default function Dashboard() {
 
         <DailyCountCard easy />
 
+        <AtRiskCard easy />
+
+        <MarketingCard easy actions={actions} onChange={loadActions} />
+
         <button className="expand-btn" onClick={() => setShowRegulars((v) => !v)} aria-expanded={showRegulars}>
           {showRegulars ? '단골 손님 접기 ▲' : `단골 손님 모두 보기 (${customers.length}명) ▼`}
         </button>
@@ -214,12 +224,16 @@ export default function Dashboard() {
       <section className="card">
         <h2 className="card-title">방문 추이 <span className="card-sub">최근 8주</span>
           <a className="card-link" href="#/report">주간 리포트 →</a></h2>
-        <WeeklyChart data={weekly} />
+        <WeeklyChart data={weekly} actions={actions} />
       </section>
 
       {todayList}
 
         <DailyCountCard easy={false} />
+
+        <AtRiskCard easy={false} />
+
+        <MarketingCard easy={false} actions={actions} onChange={loadActions} />
 
       <section className="card">
         <h2 className="card-title">{t.regularsTitle} <span className="count-badge">{customers.length}</span></h2>

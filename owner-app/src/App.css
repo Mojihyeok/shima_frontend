@@ -224,3 +224,26 @@
 .poc-goal { font-size: var(--fs-small); color: var(--muted); }
 .poc-ok { color: var(--up); font-weight: 700; }
 .poc-ng { color: var(--down); font-weight: 700; }
+
+/* 마케팅 실행 표시 (그래프) */
+.mark { fill: var(--ink); }
+.mark-count { font-size: 11px; font-weight: 700; fill: var(--ink); }
+.mark-legend { color: var(--ink); font-size: 11px; }
+.tooltip .tt-action { color: var(--ink); font-size: 12px; white-space: normal; }
+
+/* 마케팅 기록 카드 */
+.action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 8px; }
+.action-btn {
+  min-height: var(--btn-h); padding: 0 10px;
+  font-size: var(--fs-body); font-weight: 700; word-break: keep-all;
+  color: var(--ink); background: var(--card); border: 2px solid var(--line); border-radius: 12px; cursor: pointer;
+}
+.action-btn:active { border-color: var(--brand); color: var(--brand); }
+.action-btn:disabled { opacity: 0.5; }
+.action-form { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.action-form select, .action-form input {
+  min-height: 40px; padding: 0 8px; font-size: var(--fs-small);
+  border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink);
+}
+.action-form input[type="text"] { flex: 1 1 180px; }
+.action-list { margin-top: 12px; }

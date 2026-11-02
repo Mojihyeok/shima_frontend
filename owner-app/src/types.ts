@@ -105,3 +105,24 @@ export interface PocMetrics {
   autoGrants: number
   sources: Record<string, number>
 }
+
+/** 이탈 위험 단골 */
+export interface AtRiskCustomer {
+  customerId: number
+  phoneLast4: string
+  name: string | null
+  visitCount: number
+  avgCycleDays: number
+  daysSinceLast: number
+  overdueRatio: number
+  lastVisitAt: string
+}
+
+/** 마케팅 실행 기록 */
+export interface MarketingAction {
+  id: number
+  actionType: string
+  source: 'F3' | 'MANUAL'
+  date: string
+  memo: string | null
+}

@@ -1,4 +1,4 @@
-import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics } from './types'
+import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction } from './types'
 import { getToken, signalLogout } from './auth'
 
 // 지정 없으면 "지금 접속한 호스트의 8080" — 태블릿에서 PC IP로 열어도 동작
@@ -54,6 +54,7 @@ export const updateUiMode = (uiMode: 'EASY' | 'STANDARD') => authed<MeInfo>('/me
 export const getSummary = () => authed<StatsSummary>('/stats/summary')
 export const getToday = () => authed<CustomerSummary[]>('/customers/today')
 export const getCustomers = () => authed<CustomerSummary[]>('/customers')
+export const getAtRisk = (limit = 50) => authed<AtRiskCustomer[]>(`/customers/at-risk?limit=${limit}`)
 export const grantService = (customerId: number, rewardName: string, memo?: string) =>
   authed<{ granted: boolean }>(`/customers/${customerId}/grant`, 'POST', { rewardName, memo: memo ?? null })
 
@@ -89,3 +90,9 @@ export const getPocMetrics = (from?: string, to?: string) => {
   const qs = q.toString()
   return authed<PocMetrics>(`/poc${qs ? `?${qs}` : ''}`)
 }
+
+// ===== 마케팅 실행 기록 =====
+export const getActions = () => authed<MarketingAction[]>('/actions')
+export const addAction = (actionType: string, date?: string, memo?: string) =>
+  authed<MarketingAction>('/actions', 'POST', { actionType, date: date ?? null, memo: memo || null })
+export const deleteAction = (id: number) => authed<null>(`/actions/${id}`, 'DELETE')

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getMe, getWeeklyReport, getWeekly, logEvent } from './api'
-import type { WeeklyReport, WeekPoint } from './types'
+import { getMe, getWeeklyReport, getWeekly, logEvent, getActions } from './api'
+import type { WeeklyReport, WeekPoint, MarketingAction } from './types'
 import WeeklyChart from './WeeklyChart'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 import { addDays, md } from './dates'
@@ -12,10 +12,12 @@ export default function Report() {
   const [r, setR] = useState<WeeklyReport | null>(null)
   const [error, setError] = useState('')
   const [weekly, setWeekly] = useState<WeekPoint[]>([])
+  const [actions, setActions] = useState<MarketingAction[]>([])
 
   useEffect(() => {
     getMe().then((m) => { setMode(m.uiMode); applyMode(m.uiMode) }).catch(() => {})
     getWeekly(8).then(setWeekly).catch(() => {})
+    getActions().then(setActions).catch(() => {})
     logEvent('REPORT_VIEW') // PoC: 리포트 열람 횟수
   }, [])
 
@@ -110,7 +112,7 @@ export default function Report() {
       </section>
       <section className="card">
         <h2 className="card-title">방문 추이 <span className="card-sub">최근 8주</span></h2>
-        <WeeklyChart data={weekly} />
+        <WeeklyChart data={weekly} actions={actions} />
       </section>
       <p className="footnote">
         정의 — 신규: 이 주에 첫 방문 / 재방문 비율: 재방문 ÷ 방문 손님 / 평균 방문 주기: 2회 이상 방문 손님의 평균 간격.
