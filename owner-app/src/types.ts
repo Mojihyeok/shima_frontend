@@ -57,7 +57,7 @@ export interface WeeklyReport {
 }
 
 export interface DiagnosisAxis {
-  key: 'exposure' | 'reputation' | 'activity' | 'completeness' | 'revisit'
+  key: 'exposure' | 'aeo' | 'reputation' | 'activity' | 'completeness' | 'revisit'
   name: string
   easyName: string
   techName: string
@@ -125,4 +125,13 @@ export interface MarketingAction {
   source: 'F3' | 'MANUAL'
   date: string
   memo: string | null
+}
+
+/** AI 언급률 (참고 지표 — 쉬마 지수에 포함 안 됨) */
+export interface AiMention {
+  checkedAt: string
+  model: string
+  asked: number
+  mentioned: number
+  items: { question: string; mentioned: boolean; answerExcerpt: string; webSearches: number }[]
 }

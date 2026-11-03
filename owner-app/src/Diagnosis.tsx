@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { getMe, getLatestDiagnosis, runDiagnosis, logEvent } from './api'
 import type { Diagnosis as Result } from './types'
+import AiMentionCard from './AiMentionCard'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 
 /** 온라인 진단 — 쉬마 브랜드 지수 (5축, 규칙 기반). 측정 못 한 축은 이유와 함께 표시 */
@@ -81,7 +82,7 @@ export default function Diagnosis() {
               </p>
             )}
             <p className="hint">
-              {measuredCount < 5 ? `5개 중 ${measuredCount}개 항목으로 계산했어요 · ` : ''}
+              {measuredCount < result.axes.length ? `${result.axes.length}개 중 ${measuredCount}개 항목으로 계산했어요 · ` : ''}
               {new Date(result.createdAt).toLocaleDateString('ko-KR')} 진단
             </p>
             {result.placeTitle
@@ -111,12 +112,14 @@ export default function Diagnosis() {
               ))}
             </ul>
           </section>
+
+          <AiMentionCard easy={easy} />
         </>
       )}
 
       <p className="footnote">
-        점수는 AI가 아니라 정해진 규칙으로 계산해요(같은 데이터면 항상 같은 점수). 네이버 공식 검색 API로 확인할 수 있는 것과
-        쉬마 적립 기록만 사용하고, 확인할 수 없는 항목은 0점이 아니라 계산에서 빼요.
+        점수는 AI가 아니라 정해진 규칙으로 계산해요(같은 데이터면 항상 같은 점수). 네이버·카카오 공식 검색 API로 확인할 수 있는 것과
+        쉬마 적립 기록만 사용하고, 확인할 수 없는 항목은 0점이 아니라 계산에서 빼요. "AI 언급률"은 답이 매번 달라 점수에 넣지 않아요.
       </p>
     </main>
   )

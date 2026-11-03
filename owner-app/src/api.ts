@@ -1,4 +1,4 @@
-import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction } from './types'
+import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction, AiMention } from './types'
 import { getToken, signalLogout } from './auth'
 
 // 지정 없으면 "지금 접속한 호스트의 8080" — 태블릿에서 PC IP로 열어도 동작
@@ -96,3 +96,7 @@ export const getActions = () => authed<MarketingAction[]>('/actions')
 export const addAction = (actionType: string, date?: string, memo?: string) =>
   authed<MarketingAction>('/actions', 'POST', { actionType, date: date ?? null, memo: memo || null })
 export const deleteAction = (id: number) => authed<null>(`/actions/${id}`, 'DELETE')
+
+// ===== AI 언급률 (진단 참고 지표) =====
+export const runAiCheck = () => authed<AiMention>('/diagnosis/ai-check', 'POST')
+export const getLatestAiCheck = () => authed<AiMention | null>('/diagnosis/ai-check/latest')
