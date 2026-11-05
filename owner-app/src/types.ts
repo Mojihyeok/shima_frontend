@@ -85,6 +85,8 @@ export interface DiagnosisPeer {
   blogMentions: number
   recentPosts30: number
   self: boolean
+  /** false = 블로그에서 이름을 못 찾아 중앙값 계산에서 뺀 가게 (예전 진단은 없음) */
+  counted?: boolean
 }
 
 /** 하루 전체 손님 수 (count null = 아직 입력 안 함) */

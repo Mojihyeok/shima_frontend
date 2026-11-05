@@ -18,7 +18,7 @@ function compare(mine: number, med: number, what: string): string {
 
 /** 주변 가게와 비교 — 같은 "동네 + 업종" 검색 상위 가게 (블로그 언급·최근 활동) */
 export default function PeerCard({ peers, keyword, easy }: { peers: DiagnosisPeer[]; keyword: string | null; easy: boolean }) {
-  const others = peers.filter((p) => !p.self)
+  const others = peers.filter((p) => !p.self && p.counted !== false)
   const self = peers.find((p) => p.self)
   if (!self || others.length === 0) return null
 
@@ -45,7 +45,7 @@ export default function PeerCard({ peers, keyword, easy }: { peers: DiagnosisPee
             <tbody>
               {rows.map((p) => (
                 <tr key={p.name} className={p.self ? 'peer-self' : undefined}>
-                  <td>{p.name}{p.self ? ' (우리 가게)' : ''}</td>
+                  <td>{p.name}{p.self ? ' (우리 가게)' : ''}{p.counted === false ? <span className="row-sub"> · 비교 제외</span> : ''}</td>
                   <td className="num-col">{p.blogMentions.toLocaleString()}</td>
                   <td className="num-col">{p.recentPosts30}</td>
                 </tr>
@@ -59,7 +59,10 @@ export default function PeerCard({ peers, keyword, easy }: { peers: DiagnosisPee
           </table>
         </div>
       )}
-      <p className="hint">블로그 언급은 "가게 이름 + 동네" 검색 결과로 추정한 값이에요. 리뷰 수는 네이버가 공개하지 않아 비교하지 않아요.</p>
+      <p className="hint">
+        블로그 언급은 "가게 이름 + 동네" 검색 결과로 추정한 값이에요. 블로그에서 이름을 찾지 못한 가게(0건)는 측정 오류일 수 있어 중앙값에서 뺐어요.
+        리뷰 수는 네이버가 공개하지 않아 비교하지 않아요.
+      </p>
     </section>
   )
 }
