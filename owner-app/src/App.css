@@ -254,3 +254,7 @@
 .ai-items { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-direction: column; gap: 6px; }
 .ai-items summary { cursor: pointer; font-size: var(--fs-small); }
 .ai-excerpt { white-space: pre-wrap; font-size: var(--fs-small); color: var(--ink); background: var(--bg, #faf7f3); border-radius: 8px; padding: 8px 10px; margin: 6px 0 0; }
+
+/* 주변 가게 비교 */
+.peer-self td { font-weight: 800; color: var(--brand); }
+.peer-median td { color: var(--muted); font-style: italic; }

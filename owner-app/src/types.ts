@@ -76,6 +76,15 @@ export interface Diagnosis {
   searchKeyword: string | null
   axes: DiagnosisAxis[]
   previousScore: number | null
+  /** 같은 검색어 상위 가게와 비교 (self = 우리 가게). 예전 진단은 null */
+  peers: DiagnosisPeer[] | null
+}
+
+export interface DiagnosisPeer {
+  name: string
+  blogMentions: number
+  recentPosts30: number
+  self: boolean
 }
 
 /** 하루 전체 손님 수 (count null = 아직 입력 안 함) */

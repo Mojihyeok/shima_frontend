@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { getMe, getLatestDiagnosis, runDiagnosis, logEvent } from './api'
 import type { Diagnosis as Result } from './types'
 import AiMentionCard from './AiMentionCard'
+import PeerCard from './PeerCard'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 
 /** 온라인 진단 — 쉬마 브랜드 지수 (5축, 규칙 기반). 측정 못 한 축은 이유와 함께 표시 */
@@ -112,6 +113,8 @@ export default function Diagnosis() {
               ))}
             </ul>
           </section>
+
+          {result.peers && <PeerCard peers={result.peers} keyword={result.searchKeyword} easy={easy} />}
 
           <AiMentionCard easy={easy} />
         </>
