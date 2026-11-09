@@ -1,4 +1,4 @@
-import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction, AiMention } from './types'
+import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction, AiMention, Coach } from './types'
 import { getToken, signalLogout } from './auth'
 
 // 지정 없으면 "지금 접속한 호스트의 8080" — 태블릿에서 PC IP로 열어도 동작
@@ -100,3 +100,10 @@ export const deleteAction = (id: number) => authed<null>(`/actions/${id}`, 'DELE
 // ===== AI 언급률 (진단 참고 지표) =====
 export const runAiCheck = () => authed<AiMention>('/diagnosis/ai-check', 'POST')
 export const getLatestAiCheck = () => authed<AiMention | null>('/diagnosis/ai-check/latest')
+
+// ===== AI 처방 (이번 주 할 일) =====
+export const getCoach = () => authed<Coach | null>('/coach/current')
+export const newCoach = () => authed<Coach>('/coach', 'POST')
+export const coachDone = (id: number, chosenDraft: number | null) =>
+  authed<Coach>(`/coach/${id}/done`, 'POST', { chosenDraft })
+export const coachSkip = (id: number) => authed<Coach>(`/coach/${id}/skip`, 'POST')

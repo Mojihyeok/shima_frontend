@@ -6,6 +6,7 @@ import Dashboard from './Dashboard'
 import Report from './Report'
 import Diagnosis from './Diagnosis'
 import Poc from './Poc'
+import CoachPage from './CoachPage'
 import { getToken } from './auth'
 import { applyMode, cachedMode } from './mode'
 
@@ -40,5 +41,6 @@ export default function App() {
   if (route === '#/report') return <Report />
   if (route === '#/diagnosis') return <Diagnosis />
   if (route === '#/poc') return <Poc />
+  if (route === '#/coach') return <CoachPage />
   return <Dashboard />
 }

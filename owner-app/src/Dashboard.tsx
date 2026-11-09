@@ -3,6 +3,7 @@ import { getSummary, getToday, getCustomers, grantService, getMe, updateUiMode, 
 import DailyCountCard from './DailyCountCard'
 import AtRiskCard from './AtRiskCard'
 import MarketingCard from './MarketingCard'
+import CoachCard from './CoachCard'
 import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint, MarketingAction } from './types'
 import WeeklyChart from './WeeklyChart'
 import { signalLogout } from './auth'
@@ -164,6 +165,8 @@ export default function Dashboard() {
           <button className="speak-btn" onClick={() => speak(spoken)}>🔊 읽어주기</button>
         </section>
 
+        <CoachCard easy />
+
         {todayList}
 
         <DailyCountCard easy />
@@ -227,7 +230,9 @@ export default function Dashboard() {
         <WeeklyChart data={weekly} actions={actions} />
       </section>
 
-      {todayList}
+      <CoachCard easy={false} />
+
+        {todayList}
 
         <DailyCountCard easy={false} />
 

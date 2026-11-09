@@ -146,3 +146,18 @@ export interface AiMention {
   mentioned: number
   items: { question: string; mentioned: boolean; answerExcerpt: string; webSearches: number; searchSuggestionsHtml?: string | null }[]
 }
+
+/** AI 처방 — 이번 주 할 일 */
+export interface Coach {
+  id: number
+  createdAt: string
+  status: 'PENDING' | 'DONE' | 'SKIPPED'
+  source: 'AI' | 'RULE'
+  taskType: string
+  title: string
+  why: string
+  steps: string[]
+  drafts: string[]
+  audience: AtRiskCustomer[]
+  chosenDraft: number | null
+}
