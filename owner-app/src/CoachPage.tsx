@@ -111,6 +111,11 @@ export default function CoachPage() {
             <section className="coach-actions">
               <button className="give-btn wide" disabled={busy} onClick={() => act(() => coachDone(c.id, null))}>했어요</button>
               <button className="chip-btn quiet wide" disabled={busy} onClick={() => act(() => coachSkip(c.id))}>이번엔 건너뛸게요</button>
+              {!easy && (
+                <button className="chip-btn quiet wide" disabled={busy} onClick={() => act(newCoach)}>
+                  {busy ? '다시 추천받는 중…' : '다시 추천받기 (건너뛰기 기록 없이)'}
+                </button>
+              )}
             </section>
           )}
           {!pending && newBtn}
