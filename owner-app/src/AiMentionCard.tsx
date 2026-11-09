@@ -3,7 +3,8 @@ import { getLatestAiCheck, runAiCheck } from './api'
 import type { AiMention } from './types'
 
 /**
- * AI 언급률 — 웹 검색 AI에게 손님처럼 "동네 + 업종 추천"을 물어보고 우리 가게가 나오는지.
+ * AI 언급률 — 구글 검색이 되는 AI(Gemini)에게 손님처럼 "동네 + 업종 추천"을 물어보고 우리 가게가 나오는지.
+ * 답변을 보여줄 때는 구글 검색 제안(search suggestions)을 함께 표시 (Gemini API 약관) — 샌드박스 iframe으로 격리.
  * 답이 매번 달라서 쉬마 지수에는 넣지 않는 참고 지표. 하루 3번 제한 (비용).
  */
 export default function AiMentionCard({ easy }: { easy: boolean }) {
@@ -33,7 +34,7 @@ export default function AiMentionCard({ easy }: { easy: boolean }) {
       </h2>
       <p className="muted">
         {easy ? '손님처럼 AI에게 동네 가게를 물어보고, 우리 가게 이름이 나오는지 확인해요.'
-              : '웹 검색 AI에게 "동네 + 업종 추천"을 3번 묻고 가게 이름이 나온 횟수를 셉니다. 같은 질문에도 답이 달라질 수 있어요.'}
+              : '구글 검색이 되는 AI(Gemini)에게 "동네 + 업종 추천"을 3번 묻고 가게 이름이 나온 횟수를 셉니다. 같은 질문에도 답이 달라질 수 있어요.'}
       </p>
 
       {r && (
@@ -50,6 +51,10 @@ export default function AiMentionCard({ easy }: { easy: boolean }) {
                       <span className={it.mentioned ? 'poc-ok' : 'poc-ng'}>{it.mentioned ? '✓ 언급' : '✗ 없음'}</span> “{it.question}”
                     </summary>
                     <p className="ai-excerpt">{it.answerExcerpt || '(답변 없음)'}</p>
+                    {it.searchSuggestionsHtml && (
+                      <iframe className="ai-suggest" title="Google 검색 제안" sandbox="allow-popups allow-popups-to-escape-sandbox"
+                              srcDoc={it.searchSuggestionsHtml} />
+                    )}
                   </details>
                 </li>
               ))}

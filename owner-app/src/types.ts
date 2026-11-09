@@ -144,5 +144,5 @@ export interface AiMention {
   model: string
   asked: number
   mentioned: number
-  items: { question: string; mentioned: boolean; answerExcerpt: string; webSearches: number }[]
+  items: { question: string; mentioned: boolean; answerExcerpt: string; webSearches: number; searchSuggestionsHtml?: string | null }[]
 }
