@@ -1,5 +1,6 @@
 /** 할 일 종류 — 값은 백엔드 CoachService.TASKS와 맞출 것 */
 export const TASK_LABEL: Record<string, string> = {
+  qr_promo: 'QR 적립 알리기',
   winback_message: '단골 안부',
   blog_review: '블로그 후기',
   instagram_post: '인스타 게시물',
