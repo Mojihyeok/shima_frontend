@@ -118,6 +118,25 @@ export interface PocMetrics {
 }
 
 /** 이탈 위험 단골 */
+/** 시간대별 방문 (QR 적립 시각, 1시간 단위) */
+export interface HourlyStats {
+  from: string
+  to: string
+  weekdayDays: number
+  weekendDays: number
+  hours: { hour: number; weekdayTotal: number; weekendTotal: number }[]
+}
+
+/** SNS 글 대신 쓰기 결과 */
+export interface WriteResult {
+  channel: 'instagram' | 'blog'
+  topic: string
+  title: string
+  body: string
+  hashtags: string[]
+  source: 'AI' | 'RULE'
+}
+
 export interface AtRiskCustomer {
   customerId: number
   phoneLast4: string

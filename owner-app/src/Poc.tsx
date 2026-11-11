@@ -6,6 +6,8 @@ const SOURCE_LABEL: Record<string, string> = {
   instagram: '인스타그램',
   blog: '네이버·블로그',
   friend: '지인 소개',
+  coworker: '직장 동료 소개',
+  hospital: '근처 병원 근무',
   pass: '지나가다가',
   none: '응답 안 함',
 }

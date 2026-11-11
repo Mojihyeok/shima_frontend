@@ -12,6 +12,8 @@ const SOURCES: { value: string; label: string }[] = [
   { value: 'instagram', label: '인스타그램' },
   { value: 'blog', label: '네이버·블로그' },
   { value: 'friend', label: '지인 소개' },
+  { value: 'coworker', label: '직장 동료 소개' },
+  { value: 'hospital', label: '근처 병원에서 일해요' },
   { value: 'pass', label: '지나가다가' },
 ]
 

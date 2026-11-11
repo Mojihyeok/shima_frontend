@@ -1,4 +1,4 @@
-import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction, AiMention, Coach } from './types'
+import type { StatsSummary, CustomerSummary, QrInfo, LoginResponse, MeInfo, WeekPoint, WeeklyReport, Diagnosis, DailyCount, PocMetrics, AtRiskCustomer, MarketingAction, AiMention, Coach, HourlyStats, WriteResult } from './types'
 import { getToken, signalLogout } from './auth'
 
 // 지정 없으면 "지금 접속한 호스트의 8080" — 태블릿에서 PC IP로 열어도 동작
@@ -107,3 +107,10 @@ export const newCoach = () => authed<Coach>('/coach', 'POST')
 export const coachDone = (id: number, chosenDraft: number | null) =>
   authed<Coach>(`/coach/${id}/done`, 'POST', { chosenDraft })
 export const coachSkip = (id: number) => authed<Coach>(`/coach/${id}/skip`, 'POST')
+
+// ===== 시간대별 방문 =====
+export const getHourly = (weeks = 4) => authed<HourlyStats>(`/stats/hourly?weeks=${weeks}`)
+
+// ===== SNS 글 대신 쓰기 =====
+export const writePost = (channel: 'instagram' | 'blog', topic: string, note: string) =>
+  authed<WriteResult>('/write', 'POST', { channel, topic, note: note || null })

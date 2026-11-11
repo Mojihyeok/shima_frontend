@@ -273,3 +273,19 @@
 .coach-draft-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .coach-actions { display: flex; flex-direction: column; gap: 8px; }
 .chip-btn.wide { width: 100%; }
+
+/* 시간대별 방문 — 평일/주말 전환 */
+.seg-toggle { display: flex; gap: 8px; margin-bottom: 8px; }
+
+/* SNS 글 대신 쓰기 */
+.write-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.action-btn.picked { border-color: var(--brand); color: var(--brand); background: #FBF1EA; }
+.link-btn.action-btn { text-decoration: none; display: flex; align-items: center; justify-content: center; }
+.write-note {
+  width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: var(--fs-body); font-family: inherit;
+  border: 2px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); resize: vertical;
+}
+.write-note:focus { outline: none; border-color: var(--brand); }
+.write-title { font-size: var(--fs-title); font-weight: 800; margin: 0 0 8px; }
+.write-body { white-space: pre-wrap; font-size: var(--fs-body); line-height: 1.7; margin: 0 0 10px; word-break: keep-all; }
+.write-tags { color: #2a6db0; font-size: var(--fs-small); margin: 0 0 12px; word-break: break-all; }

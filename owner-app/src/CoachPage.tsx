@@ -4,6 +4,12 @@ import type { Coach } from './types'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 import { TASK_LABEL } from './coach'
 
+/** 처방이 글쓰기 할 일이면 글쓰기 화면으로 바로 */
+const WRITE_LINK: Record<string, string> = {
+  instagram_post: '#/write?ch=instagram&topic=today',
+  blog_review: '#/write?ch=blog&topic=mood',
+}
+
 /** AI 처방 화면 — 이번 주 할 일, 이유, 단계, 문구 초안(복사·선택), 안부 대상 */
 export default function CoachPage() {
   const [mode, setMode] = useState<Mode>(cachedMode())
@@ -65,6 +71,12 @@ export default function CoachPage() {
             {c.status === 'DONE' && <p className="poc-ok">✓ 했어요{c.chosenDraft !== null ? ` · ${c.chosenDraft + 1}번 문구` : ''}</p>}
             {c.status === 'SKIPPED' && <p className="muted">이번엔 건너뛰었어요</p>}
           </section>
+
+          {WRITE_LINK[c.taskType] && (
+            <a className="give-btn wide link-btn" href={WRITE_LINK[c.taskType]}>
+              {c.taskType === 'instagram_post' ? '인스타 글 바로 쓰기' : '가게 블로그 글 바로 쓰기'}
+            </a>
+          )}
 
           {c.steps.length > 0 && (
             <section className="card">

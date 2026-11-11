@@ -25,12 +25,12 @@ function niceMax(v: number): number {
 }
 
 /** 윗면만 둥근 막대 경로 (바닥은 직각 — 기준선에 붙음) */
-function topRounded(x: number, y: number, w: number, h: number): string {
+export function topRounded(x: number, y: number, w: number, h: number): string {
   const r = Math.min(R, h, w / 2)
   return `M${x},${y + h} V${y + r} Q${x},${y} ${x + r},${y} H${x + w - r} Q${x + w},${y} ${x + w},${y + r} V${y + h} Z`
 }
 
-function useWidth<T extends HTMLElement>() {
+export function useWidth<T extends HTMLElement>() {
   const ref = useRef<T>(null)
   const [w, setW] = useState(0)
   useEffect(() => {

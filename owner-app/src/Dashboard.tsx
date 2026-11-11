@@ -4,6 +4,8 @@ import DailyCountCard from './DailyCountCard'
 import AtRiskCard from './AtRiskCard'
 import MarketingCard from './MarketingCard'
 import CoachCard from './CoachCard'
+import HourlyCard from './HourlyCard'
+import WriteCard from './WriteCard'
 import type { StatsSummary, CustomerSummary, MeInfo, WeekPoint, MarketingAction } from './types'
 import WeeklyChart from './WeeklyChart'
 import { signalLogout } from './auth'
@@ -167,9 +169,13 @@ export default function Dashboard() {
 
         <CoachCard easy />
 
+        <WriteCard easy />
+
         {todayList}
 
         <DailyCountCard easy />
+
+        <HourlyCard easy />
 
         <AtRiskCard easy />
 
@@ -230,7 +236,11 @@ export default function Dashboard() {
         <WeeklyChart data={weekly} actions={actions} />
       </section>
 
+      <HourlyCard easy={false} />
+
       <CoachCard easy={false} />
+
+        <WriteCard easy={false} />
 
         {todayList}
 

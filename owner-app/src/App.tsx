@@ -7,6 +7,7 @@ import Report from './Report'
 import Diagnosis from './Diagnosis'
 import Poc from './Poc'
 import CoachPage from './CoachPage'
+import WritePage from './WritePage'
 import { getToken } from './auth'
 import { applyMode, cachedMode } from './mode'
 
@@ -42,5 +43,6 @@ export default function App() {
   if (route === '#/diagnosis') return <Diagnosis />
   if (route === '#/poc') return <Poc />
   if (route === '#/coach') return <CoachPage />
+  if (route.startsWith('#/write')) return <WritePage key={route} />
   return <Dashboard />
 }
