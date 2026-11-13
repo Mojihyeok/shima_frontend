@@ -1,5 +1,6 @@
 // 사장님 액세스 토큰 보관 (매장 태블릿에서 재로그인 줄이기 위해 localStorage)
-const KEY = 'shima.owner.token'
+export const TOKEN_KEY = 'shima.owner.token'
+const KEY = TOKEN_KEY
 
 export function getToken(): string | null {
   try { return localStorage.getItem(KEY) } catch { return null }

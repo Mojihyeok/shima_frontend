@@ -9,7 +9,7 @@ import Poc from './Poc'
 import CoachPage from './CoachPage'
 import WritePage from './WritePage'
 import ProfilePage from './ProfilePage'
-import { getToken } from './auth'
+import { getToken, TOKEN_KEY } from './auth'
 import { applyMode, cachedMode } from './mode'
 
 // 첫 화면부터 마지막으로 쓴 모드의 글자 크기로 (깜빡임 방지)
@@ -34,7 +34,14 @@ export default function App() {
   useEffect(() => {
     const onLogout = () => setAuthed(false)
     window.addEventListener('shima:logout', onLogout)
-    return () => window.removeEventListener('shima:logout', onLogout)
+    // 같은 브라우저의 다른 탭에서 로그인·로그아웃(계정 변경)하면 토큰을 함께 쓰므로,
+    // 이 탭도 새로고침해 화면(매장 이름 등)과 데이터가 다른 계정으로 섞이지 않게 함
+    const onStorage = (e: StorageEvent) => { if (e.key === TOKEN_KEY) window.location.reload() }
+    window.addEventListener('storage', onStorage)
+    return () => {
+      window.removeEventListener('shima:logout', onLogout)
+      window.removeEventListener('storage', onStorage)
+    }
   }, [])
 
   if (!authed) return <Login onLoggedIn={() => setAuthed(true)} />
