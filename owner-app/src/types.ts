@@ -186,4 +186,6 @@ export interface Coach {
   drafts: string[]
   audience: AtRiskCustomer[]
   chosenDraft: number | null
+  /** 진단·AI 언급률에서 더 좋아질 수 있는 점 (규칙 계산) */
+  improvements?: { area: string; status: string; suggestion: string; taskType: string | null }[]
 }

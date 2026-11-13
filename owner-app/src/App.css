@@ -295,3 +295,10 @@
 .hint-chips .chip-btn { font-size: var(--fs-small); min-height: 36px; padding: 0 10px; word-break: keep-all; }
 .profile-summary { border-style: dashed; }
 .profile-goal { font-weight: 800; margin: 2px 0 6px; white-space: pre-wrap; word-break: keep-all; }
+
+/* 처방: 더 좋아질 수 있는 점 */
+.improve-list { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-direction: column; gap: 10px; }
+.improve-list li { border-left: 3px solid var(--brand); padding: 2px 0 2px 10px; }
+.improve-area { font-weight: 800; margin: 0; }
+.improve-status { font-size: var(--fs-small); color: var(--muted); margin: 2px 0; word-break: keep-all; }
+.improve-tip { margin: 2px 0 0; word-break: keep-all; }

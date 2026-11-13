@@ -3,6 +3,7 @@ import { coachDone, coachSkip, getCoach, getMe, getProfile, newCoach } from './a
 import type { Coach, StoreProfile } from './types'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 import { TASK_LABEL } from './coach'
+import { hashParams } from './write'
 
 /** 처방이 글쓰기 할 일이면 글쓰기 화면으로 바로 */
 const WRITE_LINK: Record<string, string> = {
@@ -22,7 +23,14 @@ export default function CoachPage() {
 
   useEffect(() => {
     getMe().then((m) => { setMode(m.uiMode); applyMode(m.uiMode) }).catch(() => {})
-    getCoach().then(setC).catch(() => {}).finally(() => setLoading(false))
+    // 진단 화면에서 "이 진단으로 AI 처방 받기"로 왔으면(#/coach?fresh=1) 최신 진단으로 바로 새 처방
+    if (hashParams().get('fresh') === '1') {
+      window.history.replaceState(null, '', '#/coach') // 새로고침해도 다시 만들지 않게
+      setLoading(false)
+      act(newCoach)
+    } else {
+      getCoach().then(setC).catch(() => {}).finally(() => setLoading(false))
+    }
     getProfile().then(setProfile).catch(() => {})
   }, [])
 
@@ -87,6 +95,22 @@ export default function CoachPage() {
             {c.status === 'DONE' && <p className="poc-ok">✓ 했어요{c.chosenDraft !== null ? ` · ${c.chosenDraft + 1}번 문구` : ''}</p>}
             {c.status === 'SKIPPED' && <p className="muted">이번엔 건너뛰었어요</p>}
           </section>
+
+          {c.improvements && c.improvements.length > 0 && (
+            <section className="card">
+              <h2 className="card-title">진단에서 더 좋아질 수 있는 점 <span className="count-badge">{c.improvements.length}</span></h2>
+              <ul className="improve-list">
+                {c.improvements.map((i) => (
+                  <li key={i.area}>
+                    <p className="improve-area">{i.area}</p>
+                    {!easy && <p className="improve-status">{i.status}</p>}
+                    <p className="improve-tip">→ {i.suggestion}</p>
+                  </li>
+                ))}
+              </ul>
+              <a className="back-link" href="#/diagnosis">진단 결과 다시 보기 →</a>
+            </section>
+          )}
 
           {WRITE_LINK[c.taskType] && (
             <a className="give-btn wide link-btn" href={WRITE_LINK[c.taskType]}>

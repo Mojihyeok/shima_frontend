@@ -50,7 +50,7 @@ export default function App() {
   if (route === '#/report') return <Report />
   if (route === '#/diagnosis') return <Diagnosis />
   if (route === '#/poc') return <Poc />
-  if (route === '#/coach') return <CoachPage />
+  if (route.startsWith('#/coach')) return <CoachPage />
   if (route === '#/profile') return <ProfilePage />
   if (route.startsWith('#/write')) return <WritePage key={route} />
   return <Dashboard />

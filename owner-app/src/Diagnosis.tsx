@@ -117,6 +117,12 @@ export default function Diagnosis() {
           {result.peers && <PeerCard peers={result.peers} keyword={result.searchKeyword} easy={easy} />}
 
           <AiMentionCard easy={easy} />
+
+          <section className="card coach-card">
+            <h2 className="card-title">{easy ? '그럼 이번 주엔 뭘 하면 좋을까요?' : '진단 결과로 AI 처방 받기'}</h2>
+            <p className="muted">이 진단에서 부족한 점과 사장님 고민을 함께 보고, 이번 주에 할 일 하나와 바로 쓸 문구를 드려요.</p>
+            <a className="give-btn wide link-btn" href="#/coach?fresh=1">{easy ? '이번 주 할 일 받기' : '이 진단으로 AI 처방 받기'}</a>
+          </section>
         </>
       )}
 
