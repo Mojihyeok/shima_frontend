@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { coachDone, coachSkip, getCoach, getMe, newCoach } from './api'
-import type { Coach } from './types'
+import { coachDone, coachSkip, getCoach, getMe, getProfile, newCoach } from './api'
+import type { Coach, StoreProfile } from './types'
 import { applyMode, cachedMode, speak, type Mode } from './mode'
 import { TASK_LABEL } from './coach'
 
@@ -18,10 +18,12 @@ export default function CoachPage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState<number | null>(null)
+  const [profile, setProfile] = useState<StoreProfile | null>(null)
 
   useEffect(() => {
     getMe().then((m) => { setMode(m.uiMode); applyMode(m.uiMode) }).catch(() => {})
     getCoach().then(setC).catch(() => {}).finally(() => setLoading(false))
+    getProfile().then(setProfile).catch(() => {})
   }, [])
 
   const easy = mode === 'EASY'
@@ -58,6 +60,20 @@ export default function CoachPage() {
       {back}
       <h1 className="brand">{easy ? '이번 주에 할 일' : 'AI 처방'} <span className="sub">이번 주 할 일</span></h1>
       {error && <p className="error">{error}</p>}
+
+      {profile && (profile.ownerGoal || profile.storeNotes ? (
+        <section className="card profile-summary">
+          <p className="card-sub">사장님 고민</p>
+          <p className="profile-goal">{profile.ownerGoal ?? '(고민 미입력)'}</p>
+          <a className="back-link" href="#/profile">우리 가게 이야기 고치기 →</a>
+        </section>
+      ) : (
+        <section className="card profile-summary">
+          <p className="profile-goal">고민을 알려 주시면 더 맞춤으로 추천해 드려요</p>
+          <p className="muted">예: "저녁 손님이 더 왔으면", "골목이라 눈에 안 띄어요"</p>
+          <a className="give-btn wide link-btn" href="#/profile">우리 가게 이야기 적기</a>
+        </section>
+      ))}
 
       {!c && <section className="card"><p className="muted">진단 결과와 손님 기록을 보고 이번 주에 할 일을 하나 골라 드려요.</p>{newBtn}</section>}
 

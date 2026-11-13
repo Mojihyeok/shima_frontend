@@ -137,6 +137,13 @@ export interface WriteResult {
   source: 'AI' | 'RULE'
 }
 
+/** 우리 가게 이야기 — AI 처방·글쓰기 개인화 */
+export interface StoreProfile {
+  ownerGoal: string | null
+  storeNotes: string | null
+  updatedAt: string | null
+}
+
 export interface AtRiskCustomer {
   customerId: number
   phoneLast4: string

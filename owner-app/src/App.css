@@ -289,3 +289,9 @@
 .write-title { font-size: var(--fs-title); font-weight: 800; margin: 0 0 8px; }
 .write-body { white-space: pre-wrap; font-size: var(--fs-body); line-height: 1.7; margin: 0 0 10px; word-break: keep-all; }
 .write-tags { color: #2a6db0; font-size: var(--fs-small); margin: 0 0 12px; word-break: break-all; }
+
+/* 우리 가게 이야기 */
+.hint-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+.hint-chips .chip-btn { font-size: var(--fs-small); min-height: 36px; padding: 0 10px; word-break: keep-all; }
+.profile-summary { border-style: dashed; }
+.profile-goal { font-weight: 800; margin: 2px 0 6px; white-space: pre-wrap; word-break: keep-all; }

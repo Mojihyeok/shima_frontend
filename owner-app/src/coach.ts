@@ -8,4 +8,6 @@ export const TASK_LABEL: Record<string, string> = {
   naver_place_update: '네이버 정보 보강',
   kakao_place_update: '카카오맵 정보 보강',
   event: '재방문 이벤트',
+  time_promo: '시간대 손님 늘리기',
+  nearby_org: '근처 직장과 연결',
 }
